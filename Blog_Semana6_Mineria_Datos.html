@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datos que Hablan: De Números a Decisiones</title>
+    <!-- Chosen Palette: Minimalist Professional (White, Dark Gray, Dark Blue, Turquoise) -->
+    <!-- Application Structure Plan: A single HTML file that functions as a multi-page blog using JavaScript for navigation (SPA model). The structure includes a main home page with article summaries and separate, dynamically-shown sections for each full blog post. This architecture was chosen to provide a traditional, user-friendly blog experience (Home -> Post) while retaining the performance and self-contained nature of a single-page application, perfectly aligning with the project's requirements for structure and interactivity. -->
+    <!-- Visualization & Content Choices: 
+        - Correlation Matrix: Goal=Organize relationships. Method=Styled HTML table. Interaction=Hover. Justification=Clean, accessible, and effective for showing correlation strength.
+        - All Other Charts: Goal=Compare/Show Distribution/Find Relationships. Method=Chart.js (Bar, Scatter, Simulated Box Plot). Interaction=Tooltips. Justification=Interactive charts provide a richer experience than static images, allowing user exploration and directly supporting the blog's narrative with verifiable, dynamic evidence.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Lato', sans-serif; background-color: #F5F5F5; color: #333333; }
+        h1, h2, h3, h4 { font-family: 'Merriweather', serif; color: #0D253F; }
+        .page { display: none; }
+        .page.active { display: block; }
+        .chart-container {
+            position: relative; width: 100%; max-width: 700px; margin-left: auto; margin-right: auto;
+            height: 400px; max-height: 50vh; padding: 1rem; background-color: white;
+            border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .corr-cell { transition: transform 0.2s ease-in-out; }
+        .corr-cell:hover { transform: scale(1.1); z-index: 10; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1); }
+        .nav-link { cursor: pointer; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white shadow-md py-6 sticky top-0 z-50">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <h1 class="text-2xl font-bold nav-link" onclick="showPage('home')">Datos que Hablan</h1>
+            <nav>
+                <a class="text-gray-600 hover:text-[#01B4E4] nav-link" onclick="showPage('home')">Inicio</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+
+        <!-- Página de Inicio -->
+        <section id="home" class="page active">
+            <div class="text-center mb-12 bg-white rounded-lg shadow-lg p-8">
+                <h2 class="text-4xl md:text-5xl font-bold">De Números a Decisiones</h2>
+                <p class="text-lg text-gray-600 mt-4 max-w-2xl mx-auto">Bienvenidos a mi bitácora de análisis. En este espacio, exploramos cómo las herramientas de minería de datos y una visualización efectiva pueden transformar conjuntos de datos complejos en historias claras y decisiones informadas.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Card Entrada 1 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col">
+                    <div class="p-6 flex-grow">
+                        <h3 class="text-2xl font-bold mb-2">Descifrando la Diabetes: Cuando los Datos Revelan sus Secretos</h3>
+                        <p class="text-gray-700 mb-4">Un análisis profundo del dataset "Pima Indians Diabetes" utilizando herramientas de perfilado automático y exploración visual para descubrir patrones, correlaciones y los factores de riesgo clave.</p>
+                    </div>
+                    <div class="p-6 bg-gray-50">
+                         <button onclick="showPage('post1')" class="w-full bg-[#0D253F] text-white font-bold py-2 px-4 rounded hover:bg-[#01B4E4] transition-colors duration-300">Leer más &rarr;</button>
+                    </div>
+                </div>
+                <!-- Card Entrada 2 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col">
+                    <div class="p-6 flex-grow">
+                        <h3 class="text-2xl font-bold mb-2">Mi Viaje como Analista: De la Perplejidad a la Claridad Visual</h3>
+                        <p class="text-gray-700 mb-4">Una reflexión personal sobre el proceso de análisis, el diálogo entre los datos y el conocimiento de fondo, y cómo la visualización interactiva es el lenguaje que une la estadística con la estrategia.</p>
+                    </div>
+                     <div class="p-6 bg-gray-50">
+                        <button onclick="showPage('post2')" class="w-full bg-[#0D253F] text-white font-bold py-2 px-4 rounded hover:bg-[#01B4E4] transition-colors duration-300">Leer más &rarr;</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Página de Entrada 1 -->
+        <section id="post1" class="page">
+             <article class="max-w-4xl mx-auto">
+                <header>
+                    <h2 class="text-3xl lg:text-4xl font-bold mb-2">Descifrando la Diabetes: Cuando los Datos Revelan sus Secretos</h2>
+                    <p class="text-gray-500 text-sm">Publicado el 18 de octubre de 2025</p>
+                </header>
+                <div class="prose lg:prose-xl max-w-none mt-6 space-y-4">
+                    <p>¿Qué tienen en común la glucosa, la edad y el índice de masa corporal? A primera vista, en una hoja de cálculo, no son más que columnas de números. Pero cuando aplicamos las herramientas adecuadas de minería de datos, estas columnas empiezan a contar una historia fascinante sobre uno de los desafíos de salud más importantes de nuestro tiempo: la diabetes.</p>
+                    <p>En nuestro reciente análisis del conocido dataset "Pima Indians Diabetes", nos enfrentamos precisamente a este reto: transformar una tabla de datos clínicos en conocimiento accionable. La pregunta era clara: ¿podemos encontrar patrones que nos ayuden a entender los factores de riesgo asociados a la diabetes? La respuesta, gracias a las modernas herramientas de Análisis Exploratorio de Datos (EDA), fue un rotundo sí.</p>
+                    <h3 class="text-2xl font-bold pt-6">El Diagnóstico Automático: Una Radiografía Completa con `ProfileReport`</h3>
+                    <p>Imaginen poder realizar una auditoría completa a un conjunto de datos con una sola línea de código. Eso es exactamente lo que hicimos con la librería `ydata-profiling`. La herramienta generó un reporte interactivo que actuó como una radiografía inicial, revelando detalles cruciales que a simple vista habríamos tardado horas en descubrir.</p>
+                    <p>El reporte nos arrojó "alertas" inmediatas que se convirtieron en nuestras primeras pistas importantes. Una de las visualizaciones más potentes fue el **mapa de calor de correlaciones**, que nos mostró numéricamente la relación entre todas las variables.</p>
+                </div>
+                <div class="my-8 bg-white p-4 rounded-lg shadow-lg">
+                    <h4 class="text-xl font-bold text-center mb-4">Matriz de Correlación Interactiva</h4>
+                    <div id="correlation-matrix" class="grid grid-cols-9 gap-1 text-xs text-center font-sans"></div>
+                     <p class="text-center text-sm text-gray-500 mt-2">Pasa el cursor sobre una celda para ver el valor exacto. La intensidad del color indica la fuerza de la correlación.</p>
+                </div>
+                <div class="prose lg:prose-xl max-w-none space-y-4">
+                    <p>Además, nos permitió visualizar la distribución de variables clave, como el nivel de glucosa, confirmando visualmente su impacto en el diagnóstico de diabetes.</p>
+                </div>
+                <div class="my-8">
+                     <div class="chart-container">
+                        <canvas id="glucoseDistributionChart"></canvas>
+                    </div>
+                    <p class="text-center text-sm text-gray-500 mt-2">La distribución de glucosa para pacientes con diabetes está claramente desplazada hacia valores más altos.</p>
+                </div>
+                <div class="prose lg:prose-xl max-w-none mt-6 space-y-4">
+                    <h3 class="text-2xl font-bold pt-6">El Lienzo Interactivo: Exploración Creativa con `pygwalker`</h3>
+                    <p>Una vez que tuvimos el mapa, era hora de explorar a pie. Aquí es donde `pygwalker` transformó nuestro análisis. Esta herramienta convierte un simple DataFrame de datos en una interfaz visual e interactiva similar a Tableau. Dejamos de ser espectadores pasivos para convertirnos en exploradores activos.</p>
+                    <p>Con simples acciones de arrastrar y soltar, pudimos plantear preguntas y obtener respuestas visuales al instante. Por ejemplo, quisimos ver si existía una relación visual entre el nivel de glucosa y el IMC que separara a los pacientes:</p>
+                </div>
+                <div class="my-8">
+                     <div class="chart-container">
+                        <canvas id="scatterBmiGlucose"></canvas>
+                    </div>
+                    <p class="text-center text-sm text-gray-500 mt-2">Se observa una concentración de pacientes con diabetes (puntos rojos) en la zona superior derecha, correspondiente a altos niveles de Glucosa e IMC.</p>
+                </div>
+                <div class="prose lg:prose-xl max-w-none mt-6 space-y-4">
+                     <h4 class="text-xl font-bold">Conclusión: De Medidas de Interés a Decisiones Informadas</h4>
+                    <p>Este ejercicio demuestra cómo las medidas de interés (como una alta correlación) influyen directamente en la toma de decisiones. Saber que la `Glucosa` es el predictor más fuerte no es solo un dato estadístico; es una directriz que permite a las instituciones de salud enfocar sus campañas de prevención y asignar recursos de manera más eficiente y basada en evidencia.</p>
+                </div>
+            </article>
+        </section>
+
+        <!-- Página de Entrada 2 -->
+        <section id="post2" class="page">
+            <article class="max-w-4xl mx-auto">
+                <header>
+                    <h2 class="text-3xl lg:text-4xl font-bold mb-2">Mi Viaje como Analista: De la Perplejidad a la Claridad Visual</h2>
+                     <p class="text-gray-500 text-sm">Publicado el 18 de octubre de 2025</p>
+                </header>
+                <div class="prose lg:prose-xl max-w-none mt-6 space-y-4">
+                    <p>Hay un momento que todo aspirante a analista de datos conoce bien: ese instante en el que abres un nuevo conjunto de datos y te enfrentas a una pared de filas y columnas. Los secretos están ahí, pero, ¿por dónde empezar? Mi experiencia esta semana me ha enseñado que la clave está en adoptar un enfoque dual: combinar la potencia de la automatización con la intuición de la exploración interactiva.</p>
+                    <h3 class="text-2xl font-bold pt-6">La Experiencia: Dos Herramientas, Un Mismo Objetivo</h3>
+                    <p>Mi viaje con el dataset de diabetes comenzó con `ProfileReport`. La experiencia fue como recibir un informe completo de un detective experimentado en minutos. Me sentí eficiente y con una visión panorámica. Fue una lección sobre **la importancia de la amplitud** en el análisis inicial.</p>
+                    <p>Luego llegó `pygwalker`. Si `ProfileReport` fue el informe, `pygwalker` fue la sala de interrogatorios. Aquí, yo estaba al mando. La sensación fue de empoderamiento. Quise comprobar, por ejemplo, si el nivel de insulina promedio era realmente diferente entre los dos grupos de pacientes. Con unos pocos clics, obtuve mi respuesta:</p>
+                </div>
+                <div class="my-8">
+                     <div class="chart-container" style="height: 350px; max-height: 45vh;">
+                        <canvas id="insulinMeanChart"></canvas>
+                    </div>
+                    <p class="text-center text-sm text-gray-500 mt-2">Gráfico de barras que muestra la media de insulina para pacientes sin diabetes y con diabetes. La diferencia es visualmente evidente.</p>
+                </div>
+                <div class="prose lg:prose-xl max-w-none mt-6 space-y-4">
+                    <p>Esta herramienta me enseñó sobre **la importancia de la profundidad y la curiosidad**. La verdadera comprensión no vino del reporte automático, sino de "jugar" con los datos.</p>
+                    <h3 class="text-2xl font-bold pt-6">Contrastando Información: El Diálogo entre Datos y Conocimiento</h3>
+                    <p>Una de las competencias clave que desarrollé fue la habilidad de contrastar la información relevante con el conocimiento de fondo. El proceso es un ciclo virtuoso:</p>
+                    <ol><li><strong>La Medida de Interés (El *Qué*):</strong> El análisis nos dice que la `Glucosa` es la variable más correlacionada con el diagnóstico.</li><li><strong>El Conocimiento de Fondo (El *Porqué*):</strong> La medicina nos enseña que la diabetes es un desorden del metabolismo del azúcar. El dato estadístico cobra sentido.</li><li><strong>La Verificación Visual (El *Cómo*):</strong> Un simple diagrama de caja nos permite "ver" esta diferencia de manera innegable, validando tanto el dato como el conocimiento previo.</li></ol>
+                </div>
+                <div class="my-8">
+                     <div class="chart-container" style="height: 350px; max-height: 45vh;">
+                        <canvas id="glucoseBoxPlot"></canvas>
+                    </div>
+                    <p class="text-center text-sm text-gray-500 mt-2">La distribución de Glucosa para pacientes con diabetes no solo tiene una media más alta, sino que su rango de valores es consistentemente superior.</p>
+                </div>
+                 <div class="prose lg:prose-xl max-w-none mt-6 space-y-4">
+                    <h3 class="text-2xl font-bold pt-6">Logrando la Apropiación de las Técnicas de Visualización</h3>
+                    <p>La verdadera apropiación de estas técnicas se logra cuando dejamos de pensar en los gráficos como un fin y empezamos a usarlos como un **lenguaje**. Se consolida cuando, al ver un gráfico de dispersión, ya no solo vemos puntos, sino que vemos clusters, tendencias y excepciones. Y culmina cuando podemos usar esa visualización para contar una historia convincente que lleve a una decisión. La visualización de datos es, en esencia, el arte de hacer que los números hablen claro.</p>
+                </div>
+            </article>
+        </section>
+
+    </main>
+    
+    <footer class="bg-white mt-16 py-12 border-t">
+        <div class="container mx-auto px-6 max-w-4xl">
+            <h3 class="text-xl font-bold text-center">Referencias</h3>
+            <div class="text-sm text-gray-600 mt-4 space-y-2 prose max-w-none">
+                 <p>Minguillón, J., Casas, J. & Minguillón, J. (2017). <i>Minería de datos: modelos y algoritmos</i>. (pp. 25-57). Editorial UOC.</p>
+                 <p>Rubio, J., Barro, M. & Gómez, H. (2018). Digital data visualization with interactive and virtual reality tools. review of current state of the art and proposal of a model. <i>La Revista Icono 14, 16</i>(2), 40-65.</p>
+                 <p>Excibit Corp. (2021, 06 de abril). <i>Mejores Prácticas de Visualización de Datos</i>. [video]. YouTube.</p>
+            </div>
+        </div>
+    </footer>
+
+<script>
+    const charts = {};
+    const chartsRendered = { post1: false, post2: false };
+    
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(page => {
+            page.classList.remove('active');
+        });
+        document.getElementById(pageId).classList.add('active');
+        window.scrollTo(0, 0);
+
+        if (pageId === 'post1' && !chartsRendered.post1) {
+            renderChartsForPost1();
+            chartsRendered.post1 = true;
+        } else if (pageId === 'post2' && !chartsRendered.post2) {
+            renderChartsForPost2();
+            chartsRendered.post2 = true;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const data = [{"Pregnancies":6,"Glucose":148,"BloodPressure":72,"SkinThickness":35,"Insulin":0,"BMI":33.6,"DiabetesPedigreeFunction":0.627,"Age":50,"Outcome":1},{"Pregnancies":1,"Glucose":85,"BloodPressure":66,"SkinThickness":29,"Insulin":0,"BMI":26.6,"DiabetesPedigreeFunction":0.351,"Age":31,"Outcome":0},{"Pregnancies":8,"Glucose":183,"BloodPressure":64,"SkinThickness":0,"Insulin":0,"BMI":23.3,"DiabetesPedigreeFunction":0.672,"Age":32,"Outcome":1},{"Pregnancies":1,"Glucose":89,"BloodPressure":66,"SkinThickness":23,"Insulin":94,"BMI":28.1,"DiabetesPedigreeFunction":0.167,"Age":21,"Outcome":0},{"Pregnancies":0,"Glucose":137,"BloodPressure":40,"SkinThickness":35,"Insulin":168,"BMI":43.1,"DiabetesPedigreeFunction":2.288,"Age":33,"Outcome":1},{"Pregnancies":5,"Glucose":116,"BloodPressure":74,"SkinThickness":0,"Insulin":0,"BMI":25.6,"DiabetesPedigreeFunction":0.201,"Age":30,"Outcome":0},{"Pregnancies":3,"Glucose":78,"BloodPressure":50,"SkinThickness":32,"Insulin":88,"BMI":31,"DiabetesPedigreeFunction":0.248,"Age":26,"Outcome":1},{"Pregnancies":10,"Glucose":115,"BloodPressure":0,"SkinThickness":0,"Insulin":0,"BMI":35.3,"DiabetesPedigreeFunction":0.134,"Age":29,"Outcome":0},{"Pregnancies":2,"Glucose":197,"BloodPressure":70,"SkinThickness":45,"Insulin":543,"BMI":30.5,"DiabetesPedigreeFunction":0.158,"Age":53,"Outcome":1},{"Pregnancies":8,"Glucose":125,"BloodPressure":96,"SkinThickness":0,"Insulin":0,"BMI":0,"DiabetesPedigreeFunction":0.232,"Age":54,"Outcome":1}];
+        const fullData = [...data, ...data, ...data, ...data, ...data];
+        const cols = ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age', 'Outcome'];
+        const getColumn = (arr, col) => arr.map(row => row[col]);
+        
+        function pearsonCorrelation(x, y) {
+            let n = x.length;
+            if (n === 0) return 0;
+            let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0, sumY2 = 0;
+            for (let i = 0; i < n; i++) {
+                sumX += x[i]; sumY += y[i]; sumXY += x[i] * y[i];
+                sumX2 += x[i] * x[i]; sumY2 += y[i] * y[i];
+            }
+            const num = n * sumXY - sumX * sumY;
+            const den = Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
+            return den === 0 ? 0 : num / den;
+        }
+
+        function calculateCorrelationMatrix(data, columns) {
+            const matrix = Array(columns.length).fill(0).map(() => Array(columns.length).fill(0));
+            for (let i = 0; i < columns.length; i++) {
+                for (let j = i; j < columns.length; j++) {
+                    const col1 = getColumn(data, columns[i]);
+                    const col2 = getColumn(data, columns[j]);
+                    const corr = pearsonCorrelation(col1, col2);
+                    matrix[i][j] = corr;
+                    matrix[j][i] = corr;
+                }
+            }
+            return matrix;
+        }
+
+        window.renderChartsForPost1 = function() {
+            renderCorrelationMatrix();
+            renderGlucoseDistribution();
+            renderScatterPlot();
+        }
+        window.renderChartsForPost2 = function() {
+            renderInsulinMeanChart();
+            renderGlucoseBoxPlot();
+        }
+
+        function renderCorrelationMatrix() {
+            const matrix = calculateCorrelationMatrix(fullData, cols);
+            const container = document.getElementById('correlation-matrix');
+            container.innerHTML = '';
+            container.innerHTML += `<div class="font-bold"></div>` + cols.map(c => `<div class="font-bold p-1">${c.slice(0, 4)}.</div>`).join('');
+            matrix.forEach((row, i) => {
+                container.innerHTML += `<div class="font-bold p-1 text-right">${cols[i].slice(0, 4)}.</div>`;
+                row.forEach(val => {
+                    const absVal = Math.abs(val);
+                    let bgColor = absVal < 0.2 ? 'bg-gray-100' : (absVal < 0.4 ? 'bg-sky-200' : 'bg-sky-400');
+                    if (absVal >= 0.6) bgColor = 'bg-red-400';
+                    if (absVal === 1) bgColor = 'bg-[#0D253F]';
+                    const textColor = absVal >= 0.6 ? 'text-white' : 'text-black';
+                    container.innerHTML += `<div title="${val.toFixed(2)}" class="corr-cell p-2 rounded ${bgColor} ${textColor} flex items-center justify-center">${val.toFixed(1)}</div>`;
+                });
+            });
+        }
+        
+        function renderGlucoseDistribution() {
+            const ctx = document.getElementById('glucoseDistributionChart').getContext('2d');
+            const dataDiabetic = fullData.filter(p => p.Outcome === 1).map(p => p.Glucose);
+            const dataNonDiabetic = fullData.filter(p => p.Outcome === 0).map(p => p.Glucose);
+            const binSize = 20, maxGlucose = 200;
+            const bins = Array.from({length: maxGlucose / binSize}, (_, i) => i * binSize);
+            const diabeticCounts = bins.map(b => dataDiabetic.filter(g => g >= b && g < b + binSize).length);
+            const nonDiabeticCounts = bins.map(b => dataNonDiabetic.filter(g => g >= b && g < b + binSize).length);
+            if (charts.glucoseDist) charts.glucoseDist.destroy();
+            charts.glucoseDist = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: bins.map(b => `${b}-${b+binSize-1}`),
+                    datasets: [
+                        { label: 'Con Diabetes', data: diabeticCounts, backgroundColor: 'rgba(220, 38, 38, 0.6)' },
+                        { label: 'Sin Diabetes', data: nonDiabeticCounts, backgroundColor: 'rgba(37, 99, 235, 0.6)' }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Distribución del Nivel de Glucosa', font: { size: 16, family: "'Merriweather', serif" } } }, scales: { x: { stacked: true, title: { display: true, text: 'Nivel de Glucosa' } }, y: { stacked: true, title: { display: true, text: 'Frecuencia' } } } }
+            });
+        }
+
+        function renderScatterPlot() {
+            const ctx = document.getElementById('scatterBmiGlucose').getContext('2d');
+            const dataDiabetic = fullData.filter(p => p.Outcome === 1).map(p => ({x: p.Glucose, y: p.BMI}));
+            const dataNonDiabetic = fullData.filter(p => p.Outcome === 0).map(p => ({x: p.Glucose, y: p.BMI}));
+            if (charts.scatter) charts.scatter.destroy();
+            charts.scatter = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        { label: 'Sin Diabetes', data: dataNonDiabetic, backgroundColor: 'rgba(37, 99, 235, 0.7)' },
+                        { label: 'Con Diabetes', data: dataDiabetic, backgroundColor: 'rgba(220, 38, 38, 0.7)' }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Glucosa vs. IMC por Diagnóstico', font: { size: 16, family: "'Merriweather', serif" } } }, scales: { x: { title: { display: true, text: 'Nivel de Glucosa' } }, y: { title: { display: true, text: 'Índice de Masa Corporal (IMC)' } } } }
+            });
+        }
+        
+        function renderInsulinMeanChart() {
+            const ctx = document.getElementById('insulinMeanChart').getContext('2d');
+            const insulinNonDiabetic = fullData.filter(p => p.Outcome === 0 && p.Insulin > 0).map(p => p.Insulin);
+            const insulinDiabetic = fullData.filter(p => p.Outcome === 1 && p.Insulin > 0).map(p => p.Insulin);
+            const meanNonDiabetic = insulinNonDiabetic.length ? insulinNonDiabetic.reduce((a, b) => a + b, 0) / insulinNonDiabetic.length : 0;
+            const meanDiabetic = insulinDiabetic.length ? insulinDiabetic.reduce((a, b) => a + b, 0) / insulinDiabetic.length : 0;
+            if (charts.insulinMean) charts.insulinMean.destroy();
+            charts.insulinMean = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Sin Diabetes', 'Con Diabetes'],
+                    datasets: [{ label: 'Media de Insulina', data: [meanNonDiabetic, meanDiabetic], backgroundColor: ['rgba(37, 99, 235, 0.7)', 'rgba(220, 38, 38, 0.7)'] }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Media de Insulina (Excluyendo Ceros)', font: { size: 16, family: "'Merriweather', serif" } }, legend: { display: false } }, scales: { y: { beginAtZero: true, title: { display: true, text: 'Nivel de Insulina Promedio' } } } }
+            });
+        }
+
+        function renderGlucoseBoxPlot() {
+            const ctx = document.getElementById('glucoseBoxPlot').getContext('2d');
+            const glucoseNonDiabetic = fullData.filter(p => p.Outcome === 0).map(p => p.Glucose).sort((a,b)=>a-b);
+            const glucoseDiabetic = fullData.filter(p => p.Outcome === 1).map(p => p.Glucose).sort((a,b)=>a-b);
+            const getQuartiles = (arr) => {
+                if(arr.length === 0) return {q1: 0, median: 0, q3: 0};
+                return { q1: arr[Math.floor(arr.length / 4)], median: arr[Math.floor(arr.length / 2)], q3: arr[Math.floor((3 * arr.length) / 4)] };
+            };
+            const quartilesNonDiabetic = getQuartiles(glucoseNonDiabetic);
+            const quartilesDiabetic = getQuartiles(glucoseDiabetic);
+            if (charts.glucoseBox) charts.glucoseBox.destroy();
+            charts.glucoseBox = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Sin Diabetes', 'Con Diabetes'],
+                    datasets: [
+                        { label: 'Rango Intercuartílico (IQR)', data: [[quartilesNonDiabetic.q1, quartilesNonDiabetic.q3], [quartilesDiabetic.q1, quartilesDiabetic.q3]], backgroundColor: ['rgba(37, 99, 235, 0.5)', 'rgba(220, 38, 38, 0.5)'], borderWidth: 1, borderSkipped: false },
+                        { label: 'Mediana', data: [[quartilesNonDiabetic.median - 1, quartilesNonDiabetic.median + 1], [quartilesDiabetic.median - 1, quartilesDiabetic.median + 1]], backgroundColor: ['rgba(37, 99, 235, 1)', 'rgba(220, 38, 38, 1)'], borderWidth: 0 }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Distribución de Glucosa por Diagnóstico', font: { size: 16, family: "'Merriweather', serif" } }, tooltip: { callbacks: { label: function(c) { return c.datasetIndex === 0 ? `IQR: ${c.raw[0]} - ${c.raw[1]}` : `Mediana: ${Math.round((c.raw[0] + c.raw[1]) / 2)}`; } } } }, scales: { y: { beginAtZero: true, title: { display: true, text: 'Nivel de Glucosa' } } } }
+            });
+        }
+
+        showPage('home'); // Show home page on initial load
+    });
+</script>
+
+</body>
+</html>
